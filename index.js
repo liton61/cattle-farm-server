@@ -29,6 +29,7 @@ async function run() {
         const usersCollection = client.db("cattleFarmDB").collection('users')
         const cowCollection = client.db("cattleFarmDB").collection('cow')
         const goatCollection = client.db("cattleFarmDB").collection('goat')
+        const shopCollection = client.db("cattleFarmDB").collection('shop')
 
         // post method for user
         app.post('/users', async (req, res) => {
@@ -47,9 +48,16 @@ async function run() {
             const result = await cowCollection.find().toArray();
             res.send(result);
         })
-        // get method for cow
+
+        // get method for goat
         app.get('/goat', async (req, res) => {
             const result = await goatCollection.find().toArray();
+            res.send(result);
+        })
+
+        // get method for shop
+        app.get('/shop', async (req, res) => {
+            const result = await shopCollection.find().toArray();
             res.send(result);
         })
 
