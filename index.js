@@ -27,6 +27,7 @@ async function run() {
         await client.connect();
 
         const usersCollection = client.db("cattleFarmDB").collection('users');
+        const cowCollection = client.db("cattleFarmDB").collection('cow');
 
         // post method for user
         app.post('/users', async (req, res) => {
@@ -38,6 +39,13 @@ async function run() {
             }
             const result = await usersCollection.insertOne(user);
             res.send(result)
+        })
+
+        // get method for cow
+        app.get('/cow', async (req, res) => {
+            const cow = req.body;
+            const result = await cowCollection.find().toArray();
+            res.send(result);
         })
 
         await client.db("admin").command({ ping: 1 });
