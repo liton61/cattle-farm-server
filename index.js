@@ -32,7 +32,7 @@ async function run() {
         const shopCollection = client.db("cattleFarmDB").collection('shop')
 
         // post method for user
-        app.post('/users', async (req, res) => {
+        app.post('/user', async (req, res) => {
             const user = req.body;
             const query = { email: user.email }
             const existingUser = await usersCollection.findOne(query);
@@ -50,16 +50,16 @@ async function run() {
         })
 
         // get method for Admin
-        // app.get('/user/admin/:email', async (req, res) => {
-        //     const email = req.params.email;
-        //     const query = { email: email };
-        //     const user = await usersCollection.findOne(query);
-        //     let admin = false;
-        //     if (user) {
-        //         admin = user?.role === 'admin';
-        //     }
-        //     res.send({ admin });
-        // })
+        app.get('/user/admin/:email', async (req, res) => {
+            const email = req.params.email;
+            const query = { email: email };
+            const user = await usersCollection.findOne(query);
+            let admin = false;
+            if (user) {
+                admin = user?.role === 'admin';
+            }
+            res.send({ admin });
+        })
 
         // get method for cow
         app.get('/cow', async (req, res) => {
