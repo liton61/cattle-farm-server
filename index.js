@@ -9,7 +9,7 @@ app.use(express.json());
 app.use(cors());
 
 
-const { MongoClient, ServerApiVersion } = require('mongodb');
+const { MongoClient, ServerApiVersion, ObjectId } = require('mongodb');
 const uri = `mongodb+srv://${process.env.DB_USER}:${process.env.DB_PASS}@cluster0.hgznyse.mongodb.net/?retryWrites=true&w=majority&appName=Cluster0`;
 // console.log(uri);
 
@@ -59,6 +59,19 @@ async function run() {
                 admin = user?.role === 'admin';
             }
             res.send({ admin });
+        })
+
+        // patch method for user to make admin
+        app.patch('/user/admin/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const updatedDoc = {
+                $set: {
+                    role: 'admin'
+                }
+            }
+            const result = await usersCollection.updateOne(filter, updatedDoc)
+            res.send(result)
         })
 
         // get method for cow
