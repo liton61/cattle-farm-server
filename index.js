@@ -31,6 +31,7 @@ async function run() {
         const goatCollection = client.db("cattleFarmDB").collection('goat')
         const shopCollection = client.db("cattleFarmDB").collection('shop')
 
+
         // post method for user
         app.post('/user', async (req, res) => {
             const user = req.body;
@@ -61,19 +62,6 @@ async function run() {
             res.send({ admin });
         })
 
-        // patch method for user to make admin
-        app.patch('/user/admin/:id', async (req, res) => {
-            const id = req.params.id;
-            const filter = { _id: new ObjectId(id) };
-            const updatedDoc = {
-                $set: {
-                    role: 'admin'
-                }
-            }
-            const result = await usersCollection.updateOne(filter, updatedDoc)
-            res.send(result)
-        })
-
         // get method for cow
         app.get('/cow', async (req, res) => {
             const result = await cowCollection.find().toArray();
@@ -91,6 +79,28 @@ async function run() {
             const result = await shopCollection.find().toArray();
             res.send(result);
         })
+
+        // patch method for user to make admin
+        app.patch('/user/admin/:id', async (req, res) => {
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) };
+            const updatedDoc = {
+                $set: {
+                    role: 'admin'
+                }
+            }
+            const result = await usersCollection.updateOne(filter, updatedDoc)
+            res.send(result)
+        })
+
+        // delete method for user
+        app.delete('/user/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await usersCollection.deleteOne(query);
+            res.send(result);
+        })
+
 
         await client.db("admin").command({ ping: 1 });
         console.log("Pinged your deployment. You successfully connected to MongoDB!");
