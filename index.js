@@ -43,6 +43,24 @@ async function run() {
             res.send(result)
         })
 
+        // get method for user
+        app.get('/user', async (req, res) => {
+            const result = await usersCollection.find().toArray();
+            res.send(result)
+        })
+
+        // get method for Admin
+        // app.get('/user/admin/:email', async (req, res) => {
+        //     const email = req.params.email;
+        //     const query = { email: email };
+        //     const user = await usersCollection.findOne(query);
+        //     let admin = false;
+        //     if (user) {
+        //         admin = user?.role === 'admin';
+        //     }
+        //     res.send({ admin });
+        // })
+
         // get method for cow
         app.get('/cow', async (req, res) => {
             const result = await cowCollection.find().toArray();
