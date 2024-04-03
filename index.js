@@ -26,8 +26,9 @@ async function run() {
     try {
         await client.connect();
 
-        const usersCollection = client.db("cattleFarmDB").collection('users');
-        const cowCollection = client.db("cattleFarmDB").collection('cow');
+        const usersCollection = client.db("cattleFarmDB").collection('users')
+        const cowCollection = client.db("cattleFarmDB").collection('cow')
+        const goatCollection = client.db("cattleFarmDB").collection('goat')
 
         // post method for user
         app.post('/users', async (req, res) => {
@@ -43,8 +44,12 @@ async function run() {
 
         // get method for cow
         app.get('/cow', async (req, res) => {
-            const cow = req.body;
             const result = await cowCollection.find().toArray();
+            res.send(result);
+        })
+        // get method for cow
+        app.get('/goat', async (req, res) => {
+            const result = await goatCollection.find().toArray();
             res.send(result);
         })
 
