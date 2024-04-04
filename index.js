@@ -30,6 +30,8 @@ async function run() {
         const cowCollection = client.db("cattleFarmDB").collection('cow')
         const goatCollection = client.db("cattleFarmDB").collection('goat')
         const shopCollection = client.db("cattleFarmDB").collection('shop')
+        const reviewCollection = client.db("cattleFarmDB").collection('review')
+        const bookingCollection = client.db("cattleFarmDB").collection('booking')
 
 
         // post method for user
@@ -42,6 +44,13 @@ async function run() {
             }
             const result = await usersCollection.insertOne(user);
             res.send(result)
+        })
+
+        // post method for booking
+        app.post('/booking', async (req, res) => {
+            const booking = req.body;
+            const result = await bookingCollection.insertOne(booking);
+            res.send(result);
         })
 
         // get method for user
@@ -80,10 +89,21 @@ async function run() {
             res.send(result);
         })
 
+        // stats or analytics
+        app.get('/admin-stats', async (req, res) => {
+            const user = await usersCollection.estimatedDocumentCount();
+            const review = await reviewCollection.estimatedDocumentCount();
+
+            res.send({
+                user,
+                review,
+            })
+        })
+
         // patch method for user to make admin
         app.patch('/user/admin/:id', async (req, res) => {
-            const id = req.params.id;
-            const filter = { _id: new ObjectId(id) };
+            const id = req.params.id
+            const filter = { _id: new ObjectId(id) }
             const updatedDoc = {
                 $set: {
                     role: 'admin'
