@@ -88,6 +88,11 @@ async function run() {
             const result = await shopCollection.find().toArray();
             res.send(result);
         })
+        // get method for booking
+        app.get('/booking', async (req, res) => {
+            const result = await bookingCollection.find().toArray();
+            res.send(result);
+        })
 
         // stats or analytics
         app.get('/admin-stats', async (req, res) => {
