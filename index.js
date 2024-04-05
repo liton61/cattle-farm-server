@@ -53,6 +53,13 @@ async function run() {
             res.send(result);
         })
 
+        // post method for shop
+        app.post('/shop', async (req, res) => {
+            const shop = req.body;
+            const result = await bookingCollection.insertOne(shop);
+            res.send(result);
+        })
+
         // get method for user
         app.get('/user', async (req, res) => {
             const result = await usersCollection.find().toArray();
@@ -97,10 +104,16 @@ async function run() {
         // stats or analytics
         app.get('/admin-stats', async (req, res) => {
             const user = await usersCollection.estimatedDocumentCount();
+            const booking = await bookingCollection.estimatedDocumentCount();
+            const cow = await cowCollection.estimatedDocumentCount();
+            const goat = await goatCollection.estimatedDocumentCount();
             const review = await reviewCollection.estimatedDocumentCount();
 
             res.send({
                 user,
+                booking,
+                cow,
+                goat,
                 review,
             })
         })
