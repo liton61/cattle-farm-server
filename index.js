@@ -30,6 +30,7 @@ async function run() {
         const cowCollection = client.db("cattleFarmDB").collection('cow')
         const goatCollection = client.db("cattleFarmDB").collection('goat')
         const shopCollection = client.db("cattleFarmDB").collection('shop')
+        const cartCollection = client.db("cattleFarmDB").collection('cart')
         const reviewCollection = client.db("cattleFarmDB").collection('review')
         const bookingCollection = client.db("cattleFarmDB").collection('booking')
 
@@ -54,9 +55,9 @@ async function run() {
         })
 
         // post method for shop
-        app.post('/shop', async (req, res) => {
-            const shop = req.body;
-            const result = await bookingCollection.insertOne(shop);
+        app.post('/cart', async (req, res) => {
+            const cart = req.body;
+            const result = await cartCollection.insertOne(cart);
             res.send(result);
         })
 
