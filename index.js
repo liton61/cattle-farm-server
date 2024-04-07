@@ -61,6 +61,13 @@ async function run() {
             res.send(result);
         })
 
+        // post method for shop
+        app.post('/review', async (req, res) => {
+            const review = req.body;
+            const result = await reviewCollection.insertOne(review);
+            res.send(result);
+        })
+
         // get method for user
         app.get('/user', async (req, res) => {
             const result = await usersCollection.find().toArray();
@@ -105,7 +112,7 @@ async function run() {
 
         // get method for booking
         app.get('/cart', async (req, res) => {
-            const result = await bookingCollection.find().toArray();
+            const result = await cartCollection.find().toArray();
             res.send(result);
         })
 
