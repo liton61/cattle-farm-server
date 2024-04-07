@@ -129,6 +129,14 @@ async function run() {
         })
 
         // get method for booking
+        app.get('/appointment', async (req, res) => {
+            const email = req.query.email;
+            const query = { email: email };
+            const result = await appointmentCollection.find(query).toArray();
+            res.send(result);
+        })
+
+        // get method for booking
         app.get('/review', async (req, res) => {
             const result = await reviewCollection.find().toArray();
             res.send(result);
