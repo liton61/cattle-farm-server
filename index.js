@@ -116,6 +116,12 @@ async function run() {
             res.send(result);
         })
 
+        // get method for booking
+        app.get('/review', async (req, res) => {
+            const result = await reviewCollection.find().toArray();
+            res.send(result);
+        })
+
         // stats or analytics
         app.get('/admin-stats', async (req, res) => {
             const user = await usersCollection.estimatedDocumentCount();
