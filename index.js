@@ -33,6 +33,7 @@ async function run() {
         const cartCollection = client.db("cattleFarmDB").collection('cart')
         const reviewCollection = client.db("cattleFarmDB").collection('review')
         const bookingCollection = client.db("cattleFarmDB").collection('booking')
+        const appointmentCollection = client.db("cattleFarmDB").collection('appointment')
 
 
         // post method for user
@@ -65,6 +66,13 @@ async function run() {
         app.post('/review', async (req, res) => {
             const review = req.body;
             const result = await reviewCollection.insertOne(review);
+            res.send(result);
+        })
+
+        // post method for appointment
+        app.post('/appointment', async (req, res) => {
+            const appointment = req.body;
+            const result = await appointmentCollection.insertOne(appointment);
             res.send(result);
         })
 
@@ -106,13 +114,17 @@ async function run() {
 
         // get method for booking
         app.get('/booking', async (req, res) => {
-            const result = await bookingCollection.find().toArray();
+            const email = req.query.email;
+            const query = { email: email };
+            const result = await bookingCollection.find(query).toArray();
             res.send(result);
         })
 
         // get method for booking
         app.get('/cart', async (req, res) => {
-            const result = await cartCollection.find().toArray();
+            const email = req.query.email;
+            const query = { email: email };
+            const result = await cartCollection.find(query).toArray();
             res.send(result);
         })
 
