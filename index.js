@@ -26,14 +26,12 @@ async function run() {
     try {
         await client.connect();
 
-        const usersCollection = client.db("cattleFarmDB").collection('users')
-        const cowCollection = client.db("cattleFarmDB").collection('cow')
-        const goatCollection = client.db("cattleFarmDB").collection('goat')
-        const shopCollection = client.db("cattleFarmDB").collection('shop')
-        const cartCollection = client.db("cattleFarmDB").collection('cart')
-        const reviewCollection = client.db("cattleFarmDB").collection('review')
-        const bookingCollection = client.db("cattleFarmDB").collection('booking')
-        const appointmentCollection = client.db("cattleFarmDB").collection('appointment')
+        const usersCollection = client.db("cattleFarmDB").collection('users');
+        const cattleCollection = client.db("cattleFarmDB").collection('cattle');
+        const shopCollection = client.db("cattleFarmDB").collection('shop');
+        const cartCollection = client.db("cattleFarmDB").collection('cart');
+        const reviewCollection = client.db("cattleFarmDB").collection('review');
+        const bookingCollection = client.db("cattleFarmDB").collection('booking');
 
 
         // post method for user
@@ -55,24 +53,17 @@ async function run() {
             res.send(result);
         })
 
-        // post method for shop
+        // post method for cart
         app.post('/cart', async (req, res) => {
             const cart = req.body;
             const result = await cartCollection.insertOne(cart);
             res.send(result);
         })
 
-        // post method for shop
+        // post method for review
         app.post('/review', async (req, res) => {
             const review = req.body;
             const result = await reviewCollection.insertOne(review);
-            res.send(result);
-        })
-
-        // post method for appointment
-        app.post('/appointment', async (req, res) => {
-            const appointment = req.body;
-            const result = await appointmentCollection.insertOne(appointment);
             res.send(result);
         })
 
@@ -94,15 +85,9 @@ async function run() {
             res.send({ admin });
         })
 
-        // get method for cow
-        app.get('/cow', async (req, res) => {
-            const result = await cowCollection.find().toArray();
-            res.send(result);
-        })
-
-        // get method for goat
-        app.get('/goat', async (req, res) => {
-            const result = await goatCollection.find().toArray();
+        // get method for cattle
+        app.get('/cattle', async (req, res) => {
+            const result = await cattleCollection.find().toArray();
             res.send(result);
         })
 
@@ -121,6 +106,12 @@ async function run() {
         })
 
         // get method for booking
+        app.get('/admin/booking', async (req, res) => {
+            const result = await bookingCollection.find().toArray();
+            res.send(result);
+        })
+
+        // get method for cart
         app.get('/cart', async (req, res) => {
             const email = req.query.email;
             const query = { email: email };
@@ -128,15 +119,14 @@ async function run() {
             res.send(result);
         })
 
-        // get method for booking
-        app.get('/appointment', async (req, res) => {
-            const email = req.query.email;
-            const query = { email: email };
-            const result = await appointmentCollection.find(query).toArray();
-            res.send(result);
-        })
+        // get method for all cart
+        app.get('/admin/cart', async (req, res) => {
+            const allItems = await cartCollection.find().toArray();
+            res.send(allItems);
+        });
 
-        // get method for booking
+
+        // get method for review
         app.get('/review', async (req, res) => {
             const result = await reviewCollection.find().toArray();
             res.send(result);
@@ -146,15 +136,15 @@ async function run() {
         app.get('/admin-stats', async (req, res) => {
             const user = await usersCollection.estimatedDocumentCount();
             const booking = await bookingCollection.estimatedDocumentCount();
-            const cow = await cowCollection.estimatedDocumentCount();
-            const goat = await goatCollection.estimatedDocumentCount();
+            const cattle = await cattleCollection.estimatedDocumentCount();
+            const cart = await cartCollection.estimatedDocumentCount();
             const review = await reviewCollection.estimatedDocumentCount();
 
             res.send({
                 user,
                 booking,
-                cow,
-                goat,
+                cattle,
+                cart,
                 review,
             })
         })
