@@ -32,6 +32,7 @@ async function run() {
         const cartCollection = client.db("cattleFarmDB").collection('cart');
         const reviewCollection = client.db("cattleFarmDB").collection('review');
         const bookingCollection = client.db("cattleFarmDB").collection('booking');
+        const blogCollection = client.db("cattleFarmDB").collection('blog');
 
 
         // post method for user
@@ -129,6 +130,12 @@ async function run() {
         // get method for review
         app.get('/review', async (req, res) => {
             const result = await reviewCollection.find().toArray();
+            res.send(result);
+        })
+
+        // get method for blog
+        app.get('/blog', async (req, res) => {
+            const result = await blogCollection.find().toArray();
             res.send(result);
         })
 
