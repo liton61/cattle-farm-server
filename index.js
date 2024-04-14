@@ -67,6 +67,12 @@ async function run() {
             const result = await reviewCollection.insertOne(review);
             res.send(result);
         })
+        // post method for review
+        app.post('/blog', async (req, res) => {
+            const blog = req.body;
+            const result = await blogCollection.insertOne(blog);
+            res.send(result);
+        })
 
         // get method for user
         app.get('/user', async (req, res) => {
