@@ -54,6 +54,13 @@ async function run() {
             res.send(result);
         })
 
+        // post method for cattle
+        app.post('/cattle', async (req, res) => {
+            const cattle = req.body;
+            const result = await cattleCollection.insertOne(cattle);
+            res.send(result);
+        })
+
         // post method for cart
         app.post('/cart', async (req, res) => {
             const cart = req.body;
