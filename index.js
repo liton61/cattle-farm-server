@@ -112,6 +112,14 @@ async function run() {
             res.send(result);
         })
 
+        // get method for cattle
+        app.get('/cattle/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await cattleCollection.findOne(query);
+            res.send(result)
+        })
+
         // get method for shop
         app.get('/shop', async (req, res) => {
             const result = await shopCollection.find().toArray();
@@ -188,6 +196,27 @@ async function run() {
             const result = await usersCollection.updateOne(filter, updatedDoc)
             res.send(result)
         })
+
+        // patch method for cattle
+        app.patch('/cattle/:id', async (req, res) => {
+            const cattle = req.body;
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const updatedDoc = {
+                $set: {
+                    origin: cattle.origin,
+                    category: cattle.category,
+                    price: cattle.price,
+                    weight: cattle.weight,
+                    age: cattle.age,
+                    image: cattle.image
+                }
+            }
+
+            const result = await cattleCollection.updateOne(filter, updatedDoc)
+            res.send(result);
+        })
+
 
         // delete method for user
         app.delete('/user/:id', async (req, res) => {
