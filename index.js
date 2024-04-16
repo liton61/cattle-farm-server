@@ -121,6 +121,14 @@ async function run() {
         })
 
         // get method for shop
+        app.get('/shop/:id', async (req, res) => {
+            const id = req.params.id;
+            const query = { _id: new ObjectId(id) }
+            const result = await shopCollection.findOne(query);
+            res.send(result)
+        })
+
+        // get method for shop
         app.get('/shop', async (req, res) => {
             const result = await shopCollection.find().toArray();
             res.send(result);
@@ -214,6 +222,23 @@ async function run() {
             }
 
             const result = await cattleCollection.updateOne(filter, updatedDoc)
+            res.send(result);
+        })
+
+        // patch method for shop
+        app.patch('/shop/:id', async (req, res) => {
+            const shop = req.body;
+            const id = req.params.id;
+            const filter = { _id: new ObjectId(id) }
+            const updatedDoc = {
+                $set: {
+                    name: shop.name,
+                    price: shop.price,
+                    image: shop.image
+                }
+            }
+
+            const result = await shopCollection.updateOne(filter, updatedDoc)
             res.send(result);
         })
 
