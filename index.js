@@ -34,6 +34,7 @@ async function run() {
         const reviewCollection = client.db("cattleFarmDB").collection('review');
         const bookingCollection = client.db("cattleFarmDB").collection('booking');
         const blogCollection = client.db("cattleFarmDB").collection('blog');
+        const commentCollection = client.db("cattleFarmDB").collection('comment');
         const paymentCollection = client.db("cattleFarmDB").collection('payment');
 
 
@@ -83,10 +84,18 @@ async function run() {
             const result = await reviewCollection.insertOne(review);
             res.send(result);
         })
+
         // post method for review
         app.post('/blog', async (req, res) => {
             const blog = req.body;
             const result = await blogCollection.insertOne(blog);
+            res.send(result);
+        })
+
+        // post method for comment
+        app.post('/comment', async (req, res) => {
+            const comment = req.body;
+            const result = await commentCollection.insertOne(comment);
             res.send(result);
         })
 
@@ -95,6 +104,12 @@ async function run() {
             const result = await usersCollection.find().toArray();
             res.send(result)
         })
+
+        // get method for comment
+        // app.get('/comment', async (req, res) => {
+        //     const result = await commentCollection.find().toArray();
+        //     res.send(result)
+        // })
 
         // get method for Admin
         app.get('/user/admin/:email', async (req, res) => {
