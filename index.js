@@ -3,6 +3,7 @@ const app = express();
 require('dotenv').config();
 const cors = require('cors');
 const port = process.env.PORT || 5000;
+const stripe = require("stripe")(process.env.STRIPE_SECRET_KEY);
 
 // middleware
 app.use(express.json());
@@ -24,7 +25,7 @@ const client = new MongoClient(uri, {
 
 async function run() {
     try {
-        await client.connect();
+        // await client.connect();
 
         const usersCollection = client.db("cattleFarmDB").collection('users');
         const cattleCollection = client.db("cattleFarmDB").collection('cattle');
@@ -33,6 +34,7 @@ async function run() {
         const reviewCollection = client.db("cattleFarmDB").collection('review');
         const bookingCollection = client.db("cattleFarmDB").collection('booking');
         const blogCollection = client.db("cattleFarmDB").collection('blog');
+        const paymentCollection = client.db("cattleFarmDB").collection('payment');
 
 
         // post method for user
@@ -283,9 +285,46 @@ async function run() {
             res.send(result);
         })
 
+        // payment intent
+        app.post("/create-payment-intent", async (req, res) => {
+            const { price } = req.body;
+            const amount = parseFloat(price * 100);
 
-        await client.db("admin").command({ ping: 1 });
-        console.log("Pinged your deployment. You successfully connected to MongoDB!");
+            const paymentIntent = await stripe.paymentIntents.create({
+                amount: amount,
+                currency: "usd",
+                payment_method_types: ["card"],
+            });
+
+            res.send({
+                clientSecret: paymentIntent.client_secret,
+            });
+        });
+
+        app.get('/payment/:email', async (req, res) => {
+            const query = { email: req.params.email }
+            const result = await paymentCollection.find(query).toArray();
+            res.send(result);
+        })
+
+        app.post('/payment', async (req, res) => {
+            const payment = req.body;
+            const paymentResult = await paymentCollection.insertOne(payment);
+            //  carefully delete each item from the cart
+            const query = {
+                _id: {
+                    $in: payment.cartIds.map(id => new ObjectId(id))
+                }
+            };
+
+            const deleteResult = await cartCollection.deleteMany(query);
+
+            res.send({ paymentResult, deleteResult });
+        })
+
+
+        // await client.db("admin").command({ ping: 1 });
+        // console.log("Pinged your deployment. You successfully connected to MongoDB!");
     } finally {
         // await client.close();
     }
